@@ -18,7 +18,10 @@ import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-a
  *   "<name>": {
  *     "description": "short label shown in menus",
  *     "text": "the prompt text",
- *     "mode": "append" | "replace",   // default "append"
+ *     "mode": "append" | "prepend" | "replace",   // default "append"
+ *       append  = after pi's system prompt
+ *       prepend = before pi's system prompt
+ *       replace = replace pi's whole system prompt
  *     "models": ["<provider>/<id>"]  // optional scope; omit = all models
  *   }
  */
@@ -30,7 +33,7 @@ const STATE_FILE = join(AGENT_DIR, "system-prompt-state.json");
 type PromptEntry = {
 	description?: string;
 	text: string;
-	mode?: "append" | "replace";
+	mode?: "append" | "prepend" | "replace";
 	models?: string[];
 };
 type Library = Record<string, PromptEntry>;
@@ -167,10 +170,14 @@ export default function (pi: ExtensionAPI) {
 		if (!entry || !entry.text) return;
 		if (!modelMatches(entry, ctx.model)) return;
 
-		const systemPrompt =
-			entry.mode === "replace"
-				? entry.text
-				: `${event.systemPrompt}\n\n${entry.text}`;
+		let systemPrompt: string;
+		if (entry.mode === "replace") {
+			systemPrompt = entry.text;
+		} else if (entry.mode === "prepend") {
+			systemPrompt = `${entry.text}\n\n${event.systemPrompt}`;
+		} else {
+			systemPrompt = `${event.systemPrompt}\n\n${entry.text}`;
+		}
 
 		if (systemPrompt === event.systemPrompt) return;
 		return { systemPrompt };
@@ -210,9 +217,14 @@ export default function (pi: ExtensionAPI) {
 				}
 				const modeChoice = await ctx.ui.select("Apply mode", [
 					"append — add after pi's prompt",
+					"prepend — add before pi's prompt",
 					"replace — replace pi's whole prompt",
 				]);
-				const mode: "append" | "replace" = modeChoice?.startsWith("replace") ? "replace" : "append";
+				const mode: "append" | "prepend" | "replace" = modeChoice?.startsWith("replace")
+					? "replace"
+					: modeChoice?.startsWith("prepend")
+						? "prepend"
+						: "append";
 				library[name] = { description: description || undefined, text, mode };
 				saveLibrary(library);
 				saveState(ctx, { enabled: true, active: name });

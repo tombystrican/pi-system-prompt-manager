@@ -58,7 +58,7 @@ The extension stores data under `~/.pi/agent/`:
 "<name>": {
   "description": "short label shown in menus",
   "text": "the prompt text",
-  "mode": "append",                 // "append" (default, keeps pi's prompt) or "replace"
+  "mode": "append",                 // "append" (after pi's prompt, default), "prepend" (before), or "replace"
   "models": ["<provider>/<id>"]   // optional scope; omit = all models
 }
 ```

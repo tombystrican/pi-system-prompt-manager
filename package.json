@@ -1,6 +1,6 @@
 {
   "name": "pi-system-prompt-manager",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Manage a library of named system prompts in pi, with per-session enable/disable, selection, and optional per-model scoping.",
   "keywords": ["pi-package", "pi", "extension", "system-prompt"],
   "license": "MIT",
