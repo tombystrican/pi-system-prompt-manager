@@ -5,6 +5,19 @@
   "keywords": ["pi-package", "pi", "extension", "system-prompt"],
   "license": "MIT",
   "author": "tombystrican <235972685+tombystrican@users.noreply.github.com>",
+  "homepage": "https://github.com/tombystrican/pi-system-prompt-manager#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tombystrican/pi-system-prompt-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tombystrican/pi-system-prompt-manager/issues"
+  },
+  "files": [
+    "extensions",
+    "README.md",
+    "LICENSE"
+  ],
   "pi": {
     "extensions": ["./extensions"]
   },
